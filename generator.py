@@ -201,8 +201,8 @@ class StudentDataGenerator:
             return random.choice(CLASSES)
         return class_range
     
-    def generate_score(self, subject):
-        """根据设置生成随机成绩"""
+    def generate_scores_for_subject(self, subject, student_count):
+        """为特定科目生成所有学生的成绩，确保及格率不低于设定值"""
         name = subject["name"]
         min_val = self.subject_min[name].get()
         max_val = self.subject_max[name].get()
@@ -213,13 +213,30 @@ class StudentDataGenerator:
         if min_val > max_val:
             min_val, max_val = max_val, min_val
         
-        # 根据及格率生成成绩
-        if random.random() < pass_rate:
-            # 生成及格分数
-            return random.randint(pass_score, max_val)
-        else:
-            # 生成不及格分数
-            return random.randint(min_val, pass_score - 1)
+        # 计算最少需要多少个及格成绩
+        min_pass_count = int(pass_rate * student_count)
+        # 如果计算结果为0但及格率大于0，至少保证1个及格成绩
+        if min_pass_count == 0 and pass_rate > 0:
+            min_pass_count = 1
+        
+        # 先生成确保达标的及格成绩
+        scores = []
+        # 添加必要的及格成绩
+        for _ in range(min_pass_count):
+            scores.append(random.randint(pass_score, max_val))
+        
+        # 生成剩余的成绩，可以是及格或不及格
+        remaining = student_count - min_pass_count
+        for _ in range(remaining):
+            # 50%概率生成及格成绩，使最终及格率可能高于设定值
+            if random.random() < 0.5:
+                scores.append(random.randint(pass_score, max_val))
+            else:
+                scores.append(random.randint(min_val, pass_score - 1))
+        
+        # 打乱成绩顺序
+        random.shuffle(scores)
+        return scores
     
     def generate_data(self):
         """生成学生数据"""
@@ -237,22 +254,30 @@ class StudentDataGenerator:
                 messagebox.showwarning("警告", "请至少选择一个科目")
                 return
             
-            # 准备数据
+            # 准备数据结构
             data = []
             columns = ["序号", "学号", "姓名", "班级"] + [subj["name"] for subj in selected_subjects]
             
+            # 生成基本信息
+            basic_info = []
             for i in range(count):
-                row = {
+                basic_info.append({
                     "序号": i + 1,
                     "学号": self.generate_id(i),
                     "姓名": self.generate_name(),
                     "班级": self.generate_class()
-                }
-                
-                # 生成各科成绩
+                })
+            
+            # 为每个科目生成成绩
+            subject_scores = {}
+            for subj in selected_subjects:
+                subject_scores[subj["name"]] = self.generate_scores_for_subject(subj, count)
+            
+            # 合并基本信息和成绩
+            for i in range(count):
+                row = basic_info[i].copy()
                 for subj in selected_subjects:
-                    row[subj["name"]] = self.generate_score(subj)
-                
+                    row[subj["name"]] = subject_scores[subj["name"]][i]
                 data.append(row)
             
             # 转换为DataFrame
