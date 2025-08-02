@@ -1247,16 +1247,16 @@ class StudentGradeAnalysisSystem:
         from reportlab.lib.pagesizes import letter
         from reportlab.pdfgen import canvas
         from matplotlib.backends.backend_agg import FigureCanvasAgg
+        import os
+        import tempfile
+        import matplotlib.font_manager as fm
 
         # 字体设置辅助函数
         def set_pdf_font(pdf, size=12, bold=False):
             """设置PDF字体"""
-            try:
-                if bold:
-                    pdf.setFont("ChineseFont", size)
-                else:
-                    pdf.setFont("ChineseFont", size)
-            except:
+            if font_registered:
+                pdf.setFont("ChineseFont", size)
+            else:
                 if bold:
                     pdf.setFont("Helvetica-Bold", size)
                 else:
@@ -1270,9 +1270,17 @@ class StudentGradeAnalysisSystem:
                 pdfmetrics.registerFont(TTFont("ChineseFont", "SimSun.ttf"))
                 font_registered = True
                 print("成功注册本地中文字体: SimSun.ttf")
+                # 测试字体是否真的可用
+                try:
+                    test_canvas = canvas.Canvas("test.pdf")
+                    test_canvas.setFont("ChineseFont", 12)
+                    test_canvas.drawString(50, 750, "测试")
+                    print("中文字体测试成功")
+                except Exception as e:
+                    print(f"中文字体测试失败: {e}")
+                    font_registered = False
             else:
                 # 尝试注册系统中的中文字体
-                import matplotlib.font_manager as fm
                 chinese_fonts = []
                 for font in fm.findSystemFonts():
                     if any(name in font.lower() for name in ['simhei', 'simsun', 'microsoft yahei', 'pingfang', 'noto']):
@@ -1359,9 +1367,35 @@ class StudentGradeAnalysisSystem:
                     if y_position < 50:
                         pdf.showPage()
                         y_position = height - 30
-                    # 使用 str() 确保中文正确显示
-                    student_info = f"{idx+1}. {str(student['姓名'])}: {student['总分']}"
-                    pdf.drawString(50, y_position, student_info)
+                        set_pdf_font(pdf, 12)  # 重新设置字体
+                    
+                    # 处理中文字符编码问题
+                    student_name = student['姓名']
+                    total_score = student['总分']
+                    
+                    if font_registered:
+                        # 如果成功注册了中文字体，尝试使用中文姓名
+                        try:
+                            # 确保使用正确的字体
+                            set_pdf_font(pdf, 12)
+                            student_info = f"{idx+1}. {student_name}: {total_score}"
+                            pdf.drawString(50, y_position, student_info)
+                        except Exception as e:
+                            print(f"中文姓名显示失败: {e}")
+                            # 备用方案：使用学号或序号
+                            if '学号' in student:
+                                student_info = f"{idx+1}. Student ID {student['学号']}: {total_score}"
+                            else:
+                                student_info = f"{idx+1}. Student {idx+1}: {total_score}"
+                            pdf.drawString(50, y_position, student_info)
+                    else:
+                        # 如果没有中文字体，使用备用标识
+                        if '学号' in student:
+                            student_info = f"{idx+1}. Student ID {student['学号']}: {total_score}"
+                        else:
+                            student_info = f"{idx+1}. Student {idx+1}: {total_score}"
+                        pdf.drawString(50, y_position, student_info)
+                    
                     y_position -= 20
 
             # 添加所有图表
