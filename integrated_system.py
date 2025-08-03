@@ -11,12 +11,7 @@ from datetime import datetime
 import seaborn as sns
 import random
 
-# 设置中文字体支持
-# 优先使用本地目录的 SimSun.ttf 文件
-if os.path.exists("SimSun.ttf"):
-    font_prop = fm.FontProperties(fname="SimSun.ttf")
-    plt.rcParams["font.family"] = font_prop.get_name()
-    print(f"使用本地字体文件: SimSun.ttf")
+
 # 设置中文字体支持
 # 优先使用本地目录的 SimSun.ttf 文件
 if os.path.exists("SimSun.ttf"):
@@ -785,8 +780,8 @@ class StudentGradeAnalysisSystem:
 
         # 调整横向滚动条的位置，使其位于数据可视化界面范围的底部
         main_canvas.pack(side="top", fill="both", expand=True)
-        scrollbar_h.pack(side="bottom", fill="x")
-        scrollbar_v.pack(side="right", fill="y")
+        scrollbar_h.pack(side=tk.BOTTOM, fill=tk.X)
+        scrollbar_v.pack(side=tk.RIGHT, fill=tk.Y)
         
         # 存储所有图表以便导出
         self.current_figures = []
@@ -915,8 +910,8 @@ class StudentGradeAnalysisSystem:
 
         # 调整横向滚动条的位置，使其位于数据可视化界面范围的底部
         main_canvas.pack(side="top", fill="both", expand=True)
-        scrollbar_h.pack(side="bottom", fill="x")
-        scrollbar_v.pack(side="right", fill="y")
+        scrollbar_h.pack(side=tk.BOTTOM, fill=tk.X)
+        scrollbar_v.pack(side=tk.RIGHT, fill=tk.Y)
         
         # 存储所有图表以便导出
         self.current_figures = []
@@ -1597,8 +1592,8 @@ class StudentGradeAnalysisSystem:
 
         # 调整横向滚动条的位置，使其位于数据可视化界面范围的底部
         main_canvas.pack(side="top", fill="both", expand=True)
-        scrollbar_h.pack(side="bottom", fill="x")
-        scrollbar_v.pack(side="right", fill="y")
+        scrollbar_h.pack(side=tk.BOTTOM, fill=tk.X)
+        scrollbar_v.pack(side=tk.RIGHT, fill=tk.Y)
         
         # 存储所有图表以便导出
         self.current_figures = []
