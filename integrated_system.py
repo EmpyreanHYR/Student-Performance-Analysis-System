@@ -425,7 +425,7 @@ class StudentDataGenerator:
 class StudentGradeAnalysisSystem:
     def __init__(self, root):
         self.root = root
-        self.root.title("学生成绩分析系统")
+        self.root.title("基于Python的简易学生成绩分析系统")
         self.root.geometry("1200x800")
         self.root.minsize(1000, 700)
         
@@ -1493,10 +1493,9 @@ class StudentGradeAnalysisSystem:
         """显示关于信息"""
         messagebox.showinfo(
             "关于",
-            "学生成绩分析系统 v2.0\n\n"
+            "基于Python的简易学生成绩分析系统 v1.0\n\n"
             "一个用于分析学生成绩的工具，支持数据导入、统计分析、数据可视化和结果导出。\n\n"
-            "新增功能:\n- 集成学生数据生成器\n- 可生成随机学生成绩数据\n\n"
-            "© 2023 学生成绩分析系统"
+            "功能:\n- 集成学生数据生成器\n- 可生成随机学生成绩数据\n\n"
         )
     
     def show_help(self):
@@ -1516,7 +1515,7 @@ class StudentGradeAnalysisSystem:
         
         # 帮助内容
         help_content = """
-学生成绩分析系统使用说明
+基于Python的简易学生成绩分析系统使用说明
 
 1. 数据导入
    - 点击菜单栏的"文件" -> "导入数据"
