@@ -51,9 +51,9 @@ CLASSES = ["高一(1)班", "高一(2)班", "高一(3)班", "高一(4)班", "高�
 # 科目列表
 SUBJECTS = [
     {"name": "德育", "min": 0, "max": 100, "pass_score": 60, "pass_rate": 60},
-    {"name": "语文", "min": 0, "max": 150, "pass_score": 90, "pass_rate": 60},
-    {"name": "数学", "min": 0, "max": 150, "pass_score": 90, "pass_rate": 60},
-    {"name": "外语", "min": 0, "max": 150, "pass_score": 90, "pass_rate": 60},
+    {"name": "语文", "min": 0, "max": 100, "pass_score": 60, "pass_rate": 60},
+    {"name": "数学", "min": 0, "max": 100, "pass_score": 60, "pass_rate": 60},
+    {"name": "外语", "min": 0, "max": 100, "pass_score": 60, "pass_rate": 60},
     {"name": "物理", "min": 0, "max": 100, "pass_score": 60, "pass_rate": 60},
     {"name": "历史", "min": 0, "max": 100, "pass_score": 60, "pass_rate": 60},
     {"name": "生物", "min": 0, "max": 100, "pass_score": 60, "pass_rate": 60},
